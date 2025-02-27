@@ -1,0 +1,16 @@
+# requirements.txt
+fastapi==0.68.1
+requests==2.26.0
+python-dotenv==0.19.2
+pytest
+uvicorn
+pip 
+selenium
+requests
+beautifulsoup4
+pandas
+numpy
+matplotlib
+openai
+newsapi-python
+fuzzywuzzy
