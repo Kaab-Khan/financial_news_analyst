@@ -19,7 +19,7 @@ NEWS_API_URL = os.getenv("NEWS_API_URL")
 
 
 def get_news_articles_urls(stock_name):
-    URL = f"{NEWS_API_URL}q={stock_name}&from=2025-02-10&sortBy=relevance&apiKey={NEWS_API_KEY}"
+    URL = f"{NEWS_API_URL}q={stock_name}&from=2025-07-10&sortBy=relevance&apiKey={NEWS_API_KEY}"
     response = requests.get(URL)
     data = response.json()
     print(data)
@@ -51,3 +51,4 @@ def print_news_articles(stock_name):
         print(article["description"])
         print("\n" * 5)
     return
+
