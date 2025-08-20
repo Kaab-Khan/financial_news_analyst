@@ -14,3 +14,11 @@ matplotlib
 openai
 newsapi-python
 fuzzywuzzy
+selenium
+webdriver-manager
+transformers
+torch
+scikit-learn
+sentencepiece
+faiss-cpu
+sentence-transformers
