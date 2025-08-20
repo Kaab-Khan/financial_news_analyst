@@ -17,5 +17,5 @@ trusted_sources = [
     "The Times (UK)", "Politico", "The Atlantic", "The Hill", "Financial Post",
     "CoinDesk", "Cointelegraph", "Decrypt", "CryptoSlate", "Bitcoin Magazine",
     "OilPrice.com", "Mining.com", "Gold.org", "Platts (S&P Global)", "Morningstar",
-    "Zacks Investment Research", "TipRanks", "ValueWalk"
+    "Zacks Investment Research", "TipRanks", "ValueWalk", "Verge", "Wired"
 ]
