@@ -2,7 +2,9 @@ import os
 import sys
 import pytest
 
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
+#sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+
 
 from src.models.news_api import get_news_articles_urls, extract_title_and_urls, print_news_articles
 # The function takes in a stock name as a parameter and returns the news articles related to the stock name
@@ -17,6 +19,7 @@ def test_extract_title_and_urls():
     assert extract_title_and_urls(data)[0]['source'] is not None
     assert extract_title_and_urls(data)[0]['url'] is not None
     assert extract_title_and_urls(data)[0]['description'] is not None
+
 def test_print_news_articles():
     assert print_news_articles('tesla') is None
     

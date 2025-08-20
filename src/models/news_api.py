@@ -19,7 +19,7 @@ NEWS_API_URL = os.getenv("NEWS_API_URL")
 
 
 def get_news_articles_urls(stock_name):
-    URL = f"{NEWS_API_URL}q={stock_name}&from=2025-08-10&sortBy=relevance&apiKey={NEWS_API_KEY}"
+    URL = f"{NEWS_API_URL}q={stock_name}&from=2025-08-15&sortBy=relevance&apiKey={NEWS_API_KEY}"
     response = requests.get(URL)
     data = response.json()
     print(data)
@@ -40,14 +40,32 @@ def extract_title_and_urls(data):
 
     return title_and_urls
 
+def extract_title_url_content(data):
+    articles = data["articles"]
+    title_url_content = []
+    for article in articles:
+        title = article.get("title", "No title available")
+        source = article.get("source", "No source available")
+        url = article.get("url", "No url available")
+        description = article.get("description", "No description available")
+        content = article.get("content", "No content available")
+        title_url_content.append(
+            {"title": title, "source": source, "url": url, "description": description, "content": content}
+        )
+
+    return title_url_content
 
 def print_news_articles(stock_name):
     data = get_news_articles_urls(stock_name)
-    title_and_urls = extract_title_and_urls(data)
-    for article in title_and_urls:
-        print(article["title"])
-        print(article["source"])
-        print(article["url"])
-        print(article["description"])
+    title_url_content = extract_title_url_content(data)
+    for article in title_url_content:
+        print(f'title: {article["title"]}')
+        print(f'source: {article["source"]}')
+        print(f'url: {article["url"]}')
+        print(f'description: {article["description"]}')
+        print(f'content: {article["content"]}')
+        print("\n" * 2)
+        print(f"Total articles found: {len(title_url_content)}")
+        print(f"Data fetched at: {datetime.now().strftime('%Y-%m-%d) %H:%M:%S')}")
         print("\n" * 5)
     return
