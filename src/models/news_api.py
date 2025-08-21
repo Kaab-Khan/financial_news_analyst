@@ -65,7 +65,7 @@ def print_news_articles(stock_name):
         print(f'description: {article["description"]}')
         print(f'content: {article["content"]}')
         print("\n" * 2)
-        print(f"Total articles found: {len(title_url_content)}")
-        print(f"Data fetched at: {datetime.now().strftime('%Y-%m-%d) %H:%M:%S')}")
-        print("\n" * 5)
+    print(f"Total articles found: {len(title_url_content)}")
+    print(f"Data fetched at: {datetime.now().strftime('%Y-%m-%d) %H:%M:%S')}")
+    print("\n" * 5)
     return

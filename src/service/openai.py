@@ -28,7 +28,8 @@ def filter_relevant_articles(articles, api_key):
     or analyst find this news actionable?
     3- Credible Source** – Does it come from a well-regarded financial publication?
     4- Avoid General News** – Ignore irrelevant articles (e.g.,
-    company PR announcements, minor updates, general economy news without clear financial insights)."""
+    company PR announcements, minor updates, general economy news without clear financial insights).
+    5- Language** – Articles should be in English."""
 
     formatted_articles = "\n".join(
         [
@@ -41,6 +42,7 @@ def filter_relevant_articles(articles, api_key):
     prompt += formatted_articles + (
         "\n\n **Instructions:**\n*"
         "- Returns only the **most relevant articles that meet the criteria above. \n"
+        
         "-Keep the format **strictly as JSON** like this:\n"
         "'''json\n"
         '[{"title": "Example Title", "url": "https://example.com","source":"Reuters"}]\n'

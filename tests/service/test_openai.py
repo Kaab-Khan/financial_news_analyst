@@ -15,12 +15,12 @@ def test_filter_relevant_articles():
     This functions tests the working of the filter_relevant_articles function
     '''
     stock = 'tesla'
-    data = get_news_articles_urls(stock)
-    articles = extract_title_and_urls(data)
-    filtered_aricles = filtered_articles(articles)
+    data = get_news_articles_urls(stock) # Fetching news articles related to Tesla
+    articles = extract_title_and_urls(data) # Extracting titles and URLs from the fetched data
+    filtered_aricles = filtered_articles(articles) # Filtering articles to keep only those with trusted sources
     print(f"Filtered Articles: {json.dumps(filtered_aricles, indent=2)}")
     # The function should return a list of articles with trusted sources
-    assert filter_relevant_articles(filtered_aricles,api_key) is not None
+    assert filter_relevant_articles(filtered_aricles,api_key) is not None # Ensuring the function returns a non-empty result
     assert isinstance(filter_relevant_articles(filtered_aricles,api_key), list)
     assert isinstance(filter_relevant_articles(filtered_aricles,api_key)[0], dict)
     assert 'source' in filter_relevant_articles(filtered_aricles,api_key)[0]

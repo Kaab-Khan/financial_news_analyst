@@ -32,6 +32,6 @@ def filtered_articles(article_list):
         article
         for article in article_list
         if isinstance(article, dict)
-        and is_trusted_source(article.get("source", {}).get("name", ""), 85)
+        and is_trusted_source(article.get("source", {}).get("name", ""), 0)
     ]
     return filtered_article_list
