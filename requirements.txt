@@ -1,31 +1,25 @@
-# requirements.txt
-fastapi==0.68.1
-requests==2.26.0
-python-dotenv==0.19.2
-pytest
-uvicorn
-pip 
-selenium
-requests
-beautifulsoup4
-pandas
-numpy
-matplotlib
-openai
-newsapi-python
-fuzzywuzzy
-selenium
-webdriver-manager
-transformers
-torch
-scikit-learn
-sentencepiece
-faiss-cpu
-sentence-transformers
-streamlit
-requests
+# --- Streamlit deployment (CPU-only) ---
+
+streamlit==1.38.0
+requests>=2.31.0
 openai>=1.40.0
-transformers
-torch
-sentencepiece
-python-dotenv
+python-dotenv>=1.0.1
+
+# Data wrangling
+pandas>=2.2.2
+numpy>=1.26.4
+
+# LLM / FinBERT runtime (CPU)
+transformers==4.41.2
+sentencepiece>=0.2.0
+# CPU-only torch wheels (Linux). Windows fallback included for local dev if needed.
+torch==2.3.1+cpu ; platform_system!="Windows"
+torch==2.3.1 ; platform_system=="Windows"
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Optional but used by your code/logs
+fuzzywuzzy>=0.18.0
+newsapi-python>=0.2.7
+
+# If you actually render charts in Streamlit now, keep this; otherwise you can remove it
+matplotlib>=3.8.4
