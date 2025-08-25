@@ -51,7 +51,7 @@ def filter_relevant_articles(articles, api_key):
     )
     client = OpenAI(api_key=api_key)
     response = client.chat.completions.create(
-        model="gpt-4-turbo",
+        model="gpt-4o-mini",
         messages=[
             {
                 "role": "system",
@@ -59,7 +59,7 @@ def filter_relevant_articles(articles, api_key):
             },
             {"role": "user", "content": prompt},
         ],
-        max_tokens=1000,
+        max_tokens=600,
     )
 
     response_text = response.choices[0].message.content.strip()

@@ -23,3 +23,9 @@ sentencepiece
 faiss-cpu
 sentence-transformers
 streamlit
+requests
+openai>=1.40.0
+transformers
+torch
+sentencepiece
+python-dotenv

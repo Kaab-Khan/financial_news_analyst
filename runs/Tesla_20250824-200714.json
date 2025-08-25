@@ -1,0 +1,119 @@
+{
+  "query": "Tesla",
+  "date_from": "2025-08-20",
+  "date_to": "2025-08-22",
+  "count": 12,
+  "articles": [
+    {
+      "title": "Tesla Will Use A Powerful New Weapon in AI Race",
+      "url": "https://gizmodo.com/tesla-deepseek-ai-2000646701",
+      "source": "Gizmodo.com",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.7849138975143433,
+      "sentiment_score": 0.7849138975143433
+    },
+    {
+      "title": "Despite Dismal Sales, Tesla Thinks You’ll Pay More for a Cybertruck",
+      "url": "https://gizmodo.com/despite-dismal-sales-tesla-thinks-youll-pay-more-for-a-cybertruck-2000646898",
+      "source": "Gizmodo.com",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.56974858045578,
+      "sentiment_score": 0.56974858045578
+    },
+    {
+      "title": "Cybertruck Owners Sue Over Expensive Upgrade",
+      "url": "https://gizmodo.com/cybertruck-owners-sue-2000646378",
+      "source": "Gizmodo.com",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9560838341712952,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Elon Musk says Tesla's new six-seat Model Y might never come to the US",
+      "url": "https://www.businessinsider.com/elon-musk-teslas-model-y-might-never-come-to-us-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.9043956398963928,
+      "sentiment_score": 0.9043956398963928
+    },
+    {
+      "title": "Tesla board member Kimbal Musk weighs in on his brother's pay package and the idea of Tesla investing in xAI",
+      "url": "https://www.businessinsider.com/kimbal-musk-weighs-in-elon-brother-tesla-pay-package-xai-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.7219857573509216,
+      "sentiment_score": 0.7219857573509216
+    },
+    {
+      "title": "Tesla or Waymo? Here's where autonomous and automotive leaders stand.",
+      "url": "https://www.businessinsider.com/tesla-vs-waymo-what-ceos-eautonomous-automotive-leaders-say-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.9364172220230103,
+      "sentiment_score": 0.9364172220230103
+    },
+    {
+      "title": "Federal regulators probe Tesla over not properly reporting crashes involving Autopilot and Full Self-Driving",
+      "url": "https://www.businessinsider.com/nhtsa-probes-tesla-over-crash-data-reporting-involving-autopilot-fsd-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9433411359786987,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Tesla raises price of most-expensive Cybertruck by $15,000 in US",
+      "url": "https://ca.finance.yahoo.com/news/tesla-raises-price-cybertruck-cyberbeast-044853419.html",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "negative",
+      "sentiment_conf": 0.8428171277046204,
+      "sentiment_score": -0.8428171277046204
+    },
+    {
+      "title": "Tesla Takes So Long to Report Crash Data, Even Trump’s Regulators Are Taking Notice",
+      "url": "https://gizmodo.com/tesla-takes-so-long-to-report-crash-data-even-trumps-regulators-are-taking-notice-2000646444",
+      "source": "Gizmodo.com",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.8474531173706055,
+      "sentiment_score": 0.8474531173706055
+    },
+    {
+      "title": "Tesla shareholder group urges probe, ‘appropriate remedial action’ from Nasdaq over Elon Musk’s $29 billion pay package",
+      "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_2bc36432-1c7f-453a-bd85-02b6c2bb7083",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.5163403153419495,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Musks Elektro-Pickup: Teslas Cybertruck verliert gegen US-Autoriesen",
+      "url": "https://www.zeit.de/news/2025-08/21/teslas-cybertruck-verliert-gegen-us-autoriesen",
+      "source": "Die Zeit",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.8949986100196838,
+      "sentiment_score": 0.8949986100196838
+    },
+    {
+      "title": "Elon Musk’s Self-Driving Tesla Lies Are Finally Catching Up To Him",
+      "url": "https://www.forbes.com/sites/alanohnsman/2025/08/20/elon-musks-self-driving-tesla-lies-are-finally-catching-up-to-him/",
+      "source": "Forbes",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.8322257399559021,
+      "sentiment_score": 0.8322257399559021
+    }
+  ],
+  "aggregate": {
+    "score_0_100": 73.9,
+    "overall_tag": "Bullish",
+    "counts": {
+      "positive": 8,
+      "neutral": 3,
+      "negative": 1,
+      "total": 12
+    },
+    "weighted_share": {
+      "positive": 0.666,
+      "neutral": 0.248,
+      "negative": 0.086
+    }
+  }
+}

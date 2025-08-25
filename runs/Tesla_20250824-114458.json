@@ -1,0 +1,133 @@
+{
+  "query": "Tesla",
+  "count": 14,
+  "articles": [
+    {
+      "title": "Tesla Will Use A Powerful New Weapon in AI Race",
+      "url": "https://gizmodo.com/tesla-deepseek-ai-2000646701",
+      "source": "Gizmodo.com",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.7849138975143433,
+      "sentiment_score": 0.7849138975143433
+    },
+    {
+      "title": "Despite Dismal Sales, Tesla Thinks You’ll Pay More for a Cybertruck",
+      "url": "https://gizmodo.com/despite-dismal-sales-tesla-thinks-youll-pay-more-for-a-cybertruck-2000646898",
+      "source": "Gizmodo.com",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.56974858045578,
+      "sentiment_score": 0.56974858045578
+    },
+    {
+      "title": "Tesla board member Kimbal Musk weighs in on his brother's pay package and the idea of Tesla investing in xAI",
+      "url": "https://www.businessinsider.com/kimbal-musk-weighs-in-elon-brother-tesla-pay-package-xai-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.7219857573509216,
+      "sentiment_score": 0.7219857573509216
+    },
+    {
+      "title": "Elon Musk says Tesla's new six-seat Model Y might never come to the US",
+      "url": "https://www.businessinsider.com/elon-musk-teslas-model-y-might-never-come-to-us-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.9043956398963928,
+      "sentiment_score": 0.9043956398963928
+    },
+    {
+      "title": "Waymo's former CEO is not impressed with Tesla's Robotaxi",
+      "url": "https://www.businessinsider.com/ex-waymo-ceo-john-krafcik-tesla-robotaxi-san-francisco-uber-2025-7",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.48854300379753113,
+      "sentiment_score": 0.48854300379753113
+    },
+    {
+      "title": "Tesla or Waymo? Here's where autonomous and automotive leaders stand.",
+      "url": "https://www.businessinsider.com/tesla-vs-waymo-what-ceos-eautonomous-automotive-leaders-say-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.9364172220230103,
+      "sentiment_score": 0.9364172220230103
+    },
+    {
+      "title": "Federal regulators probe Tesla over not properly reporting crashes involving Autopilot and Full Self-Driving",
+      "url": "https://www.businessinsider.com/nhtsa-probes-tesla-over-crash-data-reporting-involving-autopilot-fsd-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9433411359786987,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Rivian, Tesla, and Lucid say they face big losses as the Trump administration overhauls EV regulations",
+      "url": "https://www.businessinsider.com/rivian-tesla-lucid-face-big-losses-after-ev-regulation-overhaul-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9601718783378601,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Elon Musk says he wants to 'simulate' software companies like Microsoft 'purely' with AI. He's calling it 'Macrohard.'",
+      "url": "https://www.businessinsider.com/elon-musk-recreate-microsoft-software-companies-macrohard-with-ai-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.9367454648017883,
+      "sentiment_score": 0.9367454648017883
+    },
+    {
+      "title": "Tesla says Model Y L is 'coming soon'",
+      "url": "https://ca.finance.yahoo.com/news/tesla-says-model-y-l-123326054.html",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.5939866304397583,
+      "sentiment_score": 0.5939866304397583
+    },
+    {
+      "title": "Tesla owners gut-punched after receiving unexpected notice from insurance company: 'Mind you, zero accidents in my life'",
+      "url": "https://finance.yahoo.com/news/tesla-owners-gut-punched-receiving-004500233.html",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9540494084358215,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Tesla drivers can pursue class action over self-driving claims, judge rules",
+      "url": "https://finance.yahoo.com/news/tesla-drivers-pursue-class-action-150638032.html",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.6447786688804626,
+      "sentiment_score": 0.6447786688804626
+    },
+    {
+      "title": "Mining is back as the battery boom ratchets up demand. Redwood Materials says it can make the industry sustainable.",
+      "url": "https://www.businessinsider.com/redwood-materials-caterpillar-battery-boom-mining-sustainable-recycle-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "negative",
+      "sentiment_conf": 0.8159164786338806,
+      "sentiment_score": -0.8159164786338806
+    },
+    {
+      "title": "The big buydown bet",
+      "url": "https://www.businessinsider.com/bitoday-newsletters-housing-trick-low-rate-high-value-lender-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.918208122253418,
+      "sentiment_score": 0.918208122253418
+    }
+  ],
+  "aggregate": {
+    "score_0_100": 73.4,
+    "overall_tag": "Bullish",
+    "counts": {
+      "positive": 10,
+      "neutral": 3,
+      "negative": 1,
+      "total": 14
+    },
+    "weighted_share": {
+      "positive": 0.671,
+      "neutral": 0.256,
+      "negative": 0.073
+    }
+  }
+}

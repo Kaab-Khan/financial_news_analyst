@@ -1,0 +1,63 @@
+{
+  "query": "Tesla",
+  "date_from": "2025-08-20",
+  "date_to": "2025-08-22",
+  "count": 5,
+  "articles": [
+    {
+      "title": "Federal regulators probe Tesla over not properly reporting crashes involving Autopilot and Full Self-Driving",
+      "url": "https://www.businessinsider.com/nhtsa-probes-tesla-over-crash-data-reporting-involving-autopilot-fsd-2025-8",
+      "source": "Business Insider",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.9433411359786987,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Tesla raises price of most-expensive Cybertruck by $15,000 in US",
+      "url": "https://ca.finance.yahoo.com/news/tesla-raises-price-cybertruck-cyberbeast-044853419.html",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "negative",
+      "sentiment_conf": 0.8428171277046204,
+      "sentiment_score": -0.8428171277046204
+    },
+    {
+      "title": "Tesla shareholder group urges probe, ‘appropriate remedial action’ from Nasdaq over Elon Musk’s $29 billion pay package",
+      "url": "https://consent.yahoo.com/v2/collectConsent?sessionId=1_cc-session_2bc36432-1c7f-453a-bd85-02b6c2bb7083",
+      "source": "Yahoo Entertainment",
+      "sentiment_label": "neutral",
+      "sentiment_conf": 0.5163403153419495,
+      "sentiment_score": 0.0
+    },
+    {
+      "title": "Elon Musk’s Self-Driving Tesla Lies Are Finally Catching Up To Him",
+      "url": "https://www.forbes.com/sites/alanohnsman/2025/08/20/elon-musks-self-driving-tesla-lies-are-finally-catching-up-to-him/",
+      "source": "Forbes",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.8322257399559021,
+      "sentiment_score": 0.8322257399559021
+    },
+    {
+      "title": "Musk Backs Off Plans For Third Political Party, Report Says",
+      "url": "https://www.forbes.com/sites/saradorn/2025/08/20/musk-backs-off-plans-for-third-political-party-report-says/",
+      "source": "Forbes",
+      "sentiment_label": "positive",
+      "sentiment_conf": 0.5826022028923035,
+      "sentiment_score": 0.5826022028923035
+    }
+  ],
+  "aggregate": {
+    "score_0_100": 54.3,
+    "overall_tag": "Neutral",
+    "counts": {
+      "positive": 2,
+      "neutral": 2,
+      "negative": 1,
+      "total": 5
+    },
+    "weighted_share": {
+      "positive": 0.381,
+      "neutral": 0.393,
+      "negative": 0.227
+    }
+  }
+}
