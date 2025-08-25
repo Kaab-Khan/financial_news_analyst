@@ -52,12 +52,12 @@ with st.sidebar:
         help="Your key is only used for this session and not stored."
     )
 
-# Decide which key to use
-if user_openai_key:
-    OPENAI_API_KEY = user_openai_key.strip()
-else:
-    st.warning("⚠️ Please enter your own OpenAI API key in the sidebar to run live analysis.")
-    st.stop()
+    # Decide which key to use
+    if user_openai_key:
+        OPENAI_API_KEY = user_openai_key.strip()
+    else:
+        st.warning("⚠️ Please enter your own OpenAI API key in the sidebar to run live analysis.")
+        st.stop()
 
     # Company name
     default_query = st.session_state.get("default_query", "Enter a stock name")
