@@ -6,6 +6,8 @@ import streamlit as st
 # your pipeline
 from src.pipeline.run_pipeline import run_pipeline
 
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+
 # -------------------------
 # page config
 # -------------------------
@@ -40,11 +42,25 @@ st.caption("Fetches news by company name → filters for investment relevance �
 # sidebar controls
 # -------------------------
 # --- sidebar controls ---
+
+# --- Ask user for their own OpenAI key
 with st.sidebar:
-    st.header("Settings")
+    st.header("🔑 API Settings")
+    user_openai_key = st.text_input(
+        "Enter your OpenAI API key", 
+        type="password", 
+        help="Your key is only used for this session and not stored."
+    )
+
+# Decide which key to use
+if user_openai_key:
+    OPENAI_API_KEY = user_openai_key.strip()
+else:
+    st.warning("⚠️ Please enter your own OpenAI API key in the sidebar to run live analysis.")
+    st.stop()
 
     # Company name
-    default_query = st.session_state.get("default_query", "Tesla")
+    default_query = st.session_state.get("default_query", "Enter a stock name")
     query = st.text_input("Company name", value=default_query, placeholder="e.g., Tesla, Apple, NVIDIA")
     st.session_state["default_query"] = query
 
