@@ -99,3 +99,4 @@ google-chrome-stable_current_amd64.deb
 *.debcd /root/anaconda3/financial_news_analyst/
 git pullgoogle-chrome-stable_current_amd64.deb
 *.deb
+*.deb
