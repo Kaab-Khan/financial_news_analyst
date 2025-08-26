@@ -87,12 +87,12 @@ with st.sidebar:
 # helpers
 # -------------------------
 @st.cache_data(show_spinner=False, ttl=15*60)
-def _run(query_str: str, date_from, date_to) -> dict:
+def _run(query_str: str, date_from, date_to, openai_key : str) -> dict:
     if (date_to - date_from).days > 31:
         date_from = date_to - dt.timedelta(days=31)
     if date_from > date_to:
         date_from = date_to
-    return run_pipeline(query_str, date_from=date_from, date_to=date_to)
+    return run_pipeline(query_str, date_from=date_from, date_to=date_to, api_key=openai_key)
 
 
 def _badge(tag: str) -> str:
@@ -137,7 +137,7 @@ if run_btn:
 
     with st.spinner(f"Running pipeline for '{query}'..."):
         try:
-            result = _run(query.strip(), date_from, date_to)
+            result = _run(query.strip(), date_from, date_to, user_openai_key)
         except Exception as e:
             st.exception(e)
             st.stop()

@@ -70,6 +70,7 @@ def run_pipeline(
     company_name: str,
     date_from: Optional[dt.date] = None,
     date_to: Optional[dt.date] = None,
+    api_key: str | None = None,
 ) -> Dict[str, Any]:
     """
     Run the full pipeline for a company name within an optional date range (max 31 days).
@@ -89,9 +90,9 @@ def run_pipeline(
         "aggregate": {...}
       }
     """
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY not set. `export OPENAI_API_KEY=...`")
+#    api_key = os.getenv("OPENAI_API_KEY")
+    # if not api_key:
+    #     raise RuntimeError("OPENAI_API_KEY not set. `export OPENAI_API_KEY=...`")
 
     # Normalize/clip dates (max 31 days)
     if date_from and date_to:

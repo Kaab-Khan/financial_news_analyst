@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+# api_key = os.getenv("OPENAI_API_KEY")
 
 
-def filter_relevant_articles(articles, api_key):
+def filter_relevant_articles(articles, api_key: str | None = None) -> list[dict]:
     """
     This functions sends a batch of articles to OpenAI and
     filters only the most relevant ones.
@@ -49,6 +49,9 @@ def filter_relevant_articles(articles, api_key):
         "'''\n"
         "- Do **not** include any explainabtion, markdowns, or extra text. Return JSON only."
     )
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY not provided.")
+    
     client = OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model="gpt-4o-mini",
