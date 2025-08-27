@@ -135,7 +135,7 @@ if run_btn:
     #     st.error("OPENAI_API_KEY is not set. Export it in your shell and relaunch.")
     #     st.stop()
 
-    with st.spinner(f"Running pipeline for '{query}'..."):
+    with st.spinner(f"Finding relevant news for '{query}'..."):
         try:
             result = _run(query.strip(), date_from, date_to, user_openai_key)
         except Exception as e:
@@ -202,5 +202,5 @@ if run_btn:
         )
 
 else:
-    st.info("Type a company name in the sidebar and click **Run pipeline**.")
-    st.write("This MVP uses only **title + description** for sentiment (FinBERT), after filtering for investment relevance.")
+    st.info("Type a company name in the sidebar and click **Find News Sentiment**.")
+    st.write("This uses only **title + description** for sentiment (FinBERT), after filtering for investment relevance.")
