@@ -20,7 +20,7 @@ NEWS_API_URL = os.getenv("NEWS_API_URL")
 
  # or however you store it
 
-def get_news_articles_urls(query: str, date_from: str | None = None, date_to: str | None = None):
+def get_news_articles_urls(NEWS_API_URL, query: str, date_from: str | None = None, date_to: str | None = None):
     """
     Fetch raw NewsAPI response for a company name (query).
     date_from/date_to should be ISO dates 'YYYY-MM-DD' if provided.
