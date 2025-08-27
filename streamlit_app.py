@@ -35,7 +35,7 @@ st.markdown("""
 # -------------------------
 # header
 # -------------------------
-st.title("📰 Financial News Sentiment (Headline-only MVP)")
+st.title("📰 Financial News Sentiment")
 st.caption("Fetches news by company name → filters for investment relevance → FinBERT on title+description → aggregates to a 0–100 sentiment.")
 
 # -------------------------
@@ -81,7 +81,7 @@ with st.sidebar:
     if (date_to - date_from).days > 31:
         st.warning("Range exceeds 31 days. It will be clipped to the last 31 days.")
 
-    run_btn = st.button("Run pipeline", type="primary", use_container_width=True)
+    run_btn = st.button("Run", type="primary", use_container_width=True)
 
 
 # -------------------------
