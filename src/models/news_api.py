@@ -25,8 +25,8 @@ def get_news_articles_urls(query: str, date_from: str | None = None, date_to: st
     Fetch raw NewsAPI response for a company name (query).
     date_from/date_to should be ISO dates 'YYYY-MM-DD' if provided.
     """
-    if not NEWS_API_KEY:
-        raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
+    # if not NEWS_API_KEY: We will have to add this later on for different users
+    #     raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
 
     # params = {
     #     "q": query,
