@@ -12,52 +12,46 @@ load_dotenv()
 sys.path.append(
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
 )
-
-
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-#NEWS_API_URL = os.getenv("NEWS_API_URL")
-NEWS_API_URL='https://newsapi.org/v2/everything?' #to deploy need to pass the url directly
+NEWS_API_URL = os.getenv("NEWS_API_URL", "https://newsapi.org/v2/everything")
 
- # or however you store it
-
-def get_news_articles_urls(NEWS_API_URL, query: str, date_from: str | None = None, date_to: str | None = None):
+def get_news_articles_urls(
+    query: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
+):
     """
     Fetch raw NewsAPI response for a company name (query).
-    date_from/date_to should be ISO dates 'YYYY-MM-DD' if provided.
+    date_from/date_to should be ISO 'YYYY-MM-DD' if provided.
     """
-    # if not NEWS_API_KEY: We will have to add this later on for different users
-    #     raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
+    key = api_key or NEWS_API_KEY
+    if not key:
+        raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
 
-    # params = {
-    #     "q": query,
-    #     "from": date_from,
-    #     "to": date_to,
-    #     "sortBy": "popularity",
-    #     "apiKey": NEWS_API_KEY,
-    # }
-    # try:
-    #     resp = requests.get(NEWS_API_URL, params=params, timeout=10)
+    url = (base_url or NEWS_API_URL or "https://newsapi.org/v2/everything")
+
     params = {
-        "q": query,
-        "apiKey": NEWS_API_KEY,
+        "q": (query or "").strip(),
+        "apiKey": key,
         "sortBy": "popularity",
+        "language": "en",
     }
     if date_from:
-        params["from"] = str(date_from)[:10]   # ensure YYYY-MM-DD
+        params["from"] = str(date_from)[:10]
     if date_to:
-        params["to"]   = str(date_to)[:10]   # ensure YYYY-MM-DD
+        params["to"] = str(date_to)[:10]
 
     try:
-        resp = requests.get(NEWS_API_URL, params=params, timeout=10)
+        resp = requests.get(url, params=params, timeout=10)
     except requests.RequestException as e:
         raise RuntimeError(f"NewsAPI request failed: {e}")
 
-    # Helpful diagnostics on non-OK
     if resp.status_code != 200:
         snippet = resp.text[:300].replace("\n", " ")
         raise RuntimeError(f"NewsAPI HTTP {resp.status_code}. Body: {snippet}")
 
-    # Parse JSON safely
     try:
         data = resp.json()
     except ValueError:
@@ -65,10 +59,65 @@ def get_news_articles_urls(NEWS_API_URL, query: str, date_from: str | None = Non
         raise RuntimeError(f"NewsAPI returned non-JSON response. Body: {snippet}")
 
     if data.get("status") != "ok":
-        # e.g. rate limit, invalid key, bad params
         raise RuntimeError(f"NewsAPI error: {data}")
 
     return data
+
+# NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+# #NEWS_API_URL = os.getenv("NEWS_API_URL")
+# NEWS_API_URL='https://newsapi.org/v2/everything?' #to deploy need to pass the url directly
+
+#  # or however you store it
+
+# def get_news_articles_urls(NEWS_API_URL, query: str, date_from: str | None = None, date_to: str | None = None):
+#     """
+#     Fetch raw NewsAPI response for a company name (query).
+#     date_from/date_to should be ISO dates 'YYYY-MM-DD' if provided.
+#     """
+#     # if not NEWS_API_KEY: We will have to add this later on for different users
+#     #     raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
+
+#     # params = {
+#     #     "q": query,
+#     #     "from": date_from,
+#     #     "to": date_to,
+#     #     "sortBy": "popularity",
+#     #     "apiKey": NEWS_API_KEY,
+#     # }
+#     # try:
+#     #     resp = requests.get(NEWS_API_URL, params=params, timeout=10)
+#     params = {
+#         "q": query,
+#         "apiKey": NEWS_API_KEY,
+#         "sortBy": "popularity",
+#     }
+#     if date_from:
+#         params["from"] = str(date_from)[:10]   # ensure YYYY-MM-DD
+#     if date_to:
+#         params["to"]   = str(date_to)[:10]   # ensure YYYY-MM-DD
+
+#     try:
+#         resp = requests.get(NEWS_API_URL, params=params, timeout=10)
+#     except requests.RequestException as e:
+#         raise RuntimeError(f"NewsAPI request failed: {e}")
+
+#     # Helpful diagnostics on non-OK
+#     if resp.status_code != 200:
+#         snippet = resp.text[:300].replace("\n", " ")
+#         raise RuntimeError(f"NewsAPI HTTP {resp.status_code}. Body: {snippet}")
+
+#     # Parse JSON safely
+#     try:
+#         data = resp.json()
+#     except ValueError:
+#         snippet = resp.text[:300].replace("\n", " ")
+#         raise RuntimeError(f"NewsAPI returned non-JSON response. Body: {snippet}")
+
+#     if data.get("status") != "ok":
+#         # e.g. rate limit, invalid key, bad params
+#         raise RuntimeError(f"NewsAPI error: {data}")
+
+#     return data
 
 def extract_title_url_content(data: dict):
     """
