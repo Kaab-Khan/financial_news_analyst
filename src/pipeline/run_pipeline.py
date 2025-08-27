@@ -107,15 +107,16 @@ def run_pipeline(
                 date_from=_to_datestr(date_from),
                 date_to=_to_datestr(date_to),
             )
-        else:
-            raw = get_news_articles_urls(query=company_name)
+        # else:
+        #     raw = get_news_articles_urls(query=company_name)
     except TypeError:
         # Your fetcher doesn't accept date params; fall back to no-date fetch
-        raw = get_news_articles_urls(
-            query=company_name,
-            date_from=(str(date_from)[:10] if date_from else None),
-            date_to=(str(date_to)[:10] if date_to else None),
-        )
+        raise RuntimeError("The fetcher function must accept date_from and date_to parameters.")
+        # raw = get_news_articles_urls(
+        #     query=company_name,
+        #     date_from=(str(date_from)[:10] if date_from else None),
+        #     date_to=(str(date_to)[:10] if date_to else None),
+        # )
 
     # 2) Extract minimal fields
     extracted = extract_titles(raw)
