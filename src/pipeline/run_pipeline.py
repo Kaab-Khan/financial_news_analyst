@@ -70,7 +70,8 @@ def run_pipeline(
     company_name: str,
     date_from: Optional[dt.date] = None,
     date_to: Optional[dt.date] = None,
-    api_key: str | None = None,
+    *,
+    openai_api_key: str | None = None,
 ) -> Dict[str, Any]:
     """
     Run the full pipeline for a company name within an optional date range (max 31 days).
@@ -126,7 +127,7 @@ def run_pipeline(
     trusted = filtered_articles(rows)
 
     # 5) LLM relevance (OpenAI) — keep only relevant
-    final_articles: List[Dict[str, Any]] = filter_relevant_articles(trusted, api_key)
+    final_articles: List[Dict[str, Any]] = filter_relevant_articles(trusted, api_key=openai_api_key)
 
 
   # 6- FinBET Sentiment

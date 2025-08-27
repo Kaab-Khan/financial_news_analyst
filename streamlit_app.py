@@ -92,7 +92,7 @@ def _run(query_str: str, date_from, date_to, openai_key : str) -> dict:
         date_from = date_to - dt.timedelta(days=31)
     if date_from > date_to:
         date_from = date_to
-    return run_pipeline(query_str, date_from=date_from, date_to=date_to, api_key=openai_key)
+    return run_pipeline(query_str, date_from=date_from, date_to=date_to, openai_api_key=openai_key)
 
 
 def _badge(tag: str) -> str:
@@ -131,9 +131,9 @@ if run_btn:
     if not query.strip():
         st.warning("Please type a company name.")
         st.stop()
-    if not os.getenv("OPENAI_API_KEY"):
-        st.error("OPENAI_API_KEY is not set. Export it in your shell and relaunch.")
-        st.stop()
+    # if not os.getenv("OPENAI_API_KEY"):
+    #     st.error("OPENAI_API_KEY is not set. Export it in your shell and relaunch.")
+    #     st.stop()
 
     with st.spinner(f"Running pipeline for '{query}'..."):
         try:
