@@ -12,7 +12,7 @@ load_dotenv()
 sys.path.append(
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src")
 )
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY", "fdac2281006a456d88ae4acccd2490eb")
 NEWS_API_URL = os.getenv("NEWS_API_URL", "https://newsapi.org/v2/everything")
 
 def get_news_articles_urls(
