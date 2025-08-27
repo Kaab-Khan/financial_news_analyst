@@ -62,6 +62,7 @@ with st.sidebar:
     # Company name
     default_query = st.session_state.get("default_query", "Enter a stock name")
     query = st.text_input("Company name", value=default_query, placeholder="e.g., Tesla, Apple, NVIDIA")
+    st.caption("Pleas write full company name")
     st.session_state["default_query"] = query
 
     # Date range (max 31 days)
