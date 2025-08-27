@@ -103,12 +103,12 @@ def run_pipeline(
     try:
         if date_from and date_to:
             raw = get_news_articles_urls(
-                company_name.strip(),
+                query=company_name.strip(),
                 date_from=_to_datestr(date_from),
                 date_to=_to_datestr(date_to),
             )
         else:
-            raw = get_news_articles_urls(company_name)
+            raw = get_news_articles_urls(query=company_name)
     except TypeError:
         # Your fetcher doesn't accept date params; fall back to no-date fetch
         raw = get_news_articles_urls(company_name)
