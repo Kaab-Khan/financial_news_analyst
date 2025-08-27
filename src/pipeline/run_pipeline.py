@@ -100,18 +100,18 @@ def run_pipeline(
         date_from, date_to = _clip_dates(date_from, date_to)
 
     # 1) Fetch raw (prefer passing dates to your fetcher if it supports them)
-    try:
-        if date_from and date_to:
-            raw = get_news_articles_urls(
-                query=company_name.strip(),
-                date_from=_to_datestr(date_from),
-                date_to=_to_datestr(date_to),
-            )
+    # try:
+    if date_from and date_to:
+        raw = get_news_articles_urls(
+            query=company_name.strip(),
+            date_from=_to_datestr(date_from),
+            date_to=_to_datestr(date_to),
+        )
         # else:
         #     raw = get_news_articles_urls(query=company_name)
-    except TypeError:
-        # Your fetcher doesn't accept date params; fall back to no-date fetch
-        raise RuntimeError("The fetcher function must accept date_from and date_to parameters.")
+    # except TypeError:
+    #     # Your fetcher doesn't accept date params; fall back to no-date fetch
+    #     raise RuntimeError("The fetcher function must accept date_from and date_to parameters.")
         # raw = get_news_articles_urls(
         #     query=company_name,
         #     date_from=(str(date_from)[:10] if date_from else None),
