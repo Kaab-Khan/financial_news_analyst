@@ -111,7 +111,11 @@ def run_pipeline(
             raw = get_news_articles_urls(query=company_name)
     except TypeError:
         # Your fetcher doesn't accept date params; fall back to no-date fetch
-        raw = get_news_articles_urls(query=company_name)
+        raw = get_news_articles_urls(
+            query=company_name,
+            date_from=(str(date_from)[:10] if date_from else None),
+            date_to=(str(date_to)[:10] if date_to else None),
+        )
 
     # 2) Extract minimal fields
     extracted = extract_titles(raw)
