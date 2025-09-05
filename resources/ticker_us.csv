@@ -1,0 +1,11 @@
+ticker,company_name,exchange,aliases
+AAPL,Apple Inc,NASDAQ,Apple|Apple Computer|Apple Inc.
+MSFT,Microsoft Corporation,NASDAQ,Microsoft|Microsoft Corp
+TSLA,Tesla Inc,NASDAQ,Tesla|Tesla Motors
+GOOGL,Alphabet Inc Class A,NASDAQ,Alphabet|Google|Google Inc|Alphabet Inc
+AMZN,Amazon.com Inc,NASDAQ,Amazon|Amazon.com
+META,Meta Platforms Inc Class A,NASDAQ,Meta|Facebook|Facebook Inc|Meta Platforms
+NVDA,NVIDIA Corporation,NASDAQ,NVIDIA|NVidia|NVIDIA Corp
+SHEL,Shell plc,NYSE,Shell|Royal Dutch Shell|Shell PLC
+JPM,JP Morgan Chase & Co,NYSE,JP Morgan|JPMorgan|JPMorgan Chase
+BRK.B,Berkshire Hathaway Inc Class B,NYSE,Berkshire|Berkshire Hathaway

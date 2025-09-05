@@ -1,6 +1,6 @@
 # requirements.txt
 fastapi==0.68.1
-requests==2.26.0
+requests>=2.31
 python-dotenv==0.19.2
 pytest
 uvicorn
@@ -29,3 +29,4 @@ transformers
 torch
 sentencepiece
 python-dotenv
+yfinance==0.2.43
