@@ -21,6 +21,9 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	$(PYTHON_INTERPRETER) -m pip install -e .make
 
+# Install development dependencies from requirements-dev.txt
+requirements-dev:
+	$(PYTHON_INTERPRETER) -m pip install -r requirements-dev.txt
 run_dev:
     source ~/anaconda3/etc/profile.d/conda.sh && conda activate $(ENV_NAME) && cd src && uvicorn main:app --reload --host 0.0.0.0
 
@@ -43,9 +46,11 @@ activate_env:
 # Install dependencies from requirements.txt
 install_deps:
 	conda install --name $(ENV_NAME) --file requirements.txt -y
+	conda install --name $(ENV_NAME) --file requirements-dev.txt -y
 
 requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install -r requirements-dev.txt
 	$(PYTHON_INTERPRETER) -m pip install setuptools wheel
 
 # Format code using black
