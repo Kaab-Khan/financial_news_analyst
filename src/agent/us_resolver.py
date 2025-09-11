@@ -4,7 +4,7 @@ import csv, os, re
 from functools import lru_cache
 from typing import Dict, List, Tuple
 
-DATA_PATH = os.getenv("US_TICKERS_CSV", "data/tickers_us.csv")
+DATA_PATH = os.getenv("US_TICKERS_CSV", "resources/ticker_us.csv")
 _TICKER_RE = re.compile(r"^[A-Z.-]{1,6}$")
 
 def _norm(s: str) -> str:

@@ -2,6 +2,7 @@ import pytest
 import os
 import csv
 import pathlib
+import sys
 from src.agent.us_resolver import (
     _norm,
     _load_rows,
@@ -28,7 +29,7 @@ def test_norm():
 def test_load_rows():
     """Test the _load_rows function with the actual CSV file."""
     # Ensure the file exists
-    assert os.path.exists(ACTUAL_CSV_PATH), f"CSV file not found at {ACTUAL_CSV_PATH}"
+    assert os.path.exists(DATA_PATH), f"CSV file not found at {DATA_PATH}"
 
     # Load rows from the actual file
     rows = _load_rows()
@@ -36,10 +37,16 @@ def test_load_rows():
 
     # Check the structure of the first row
     first_row = rows[0]
-    assert "ticker" in first_row
-    assert "company_name" in first_row
-    assert "exchange" in first_row
-    assert "aliases" in first_row
+    assert "ticker" in first_row, "Missing 'ticker' field in the first row."
+    assert "company_name" in first_row, "Missing 'company_name' field in the first row."
+    assert "exchange" in first_row, "Missing 'exchange' field in the first row."
+    assert "aliases" in first_row, "Missing 'aliases' field in the first row."
+
+    # Check that the fields are properly formatted
+    assert first_row["ticker"].isupper(), "Ticker should be uppercase."
+    assert isinstance(first_row["company_name"], str), "Company name should be a string."
+    assert first_row["exchange"].isupper(), "Exchange should be uppercase."
+    assert isinstance(first_row["aliases"], str), "Aliases should be a string."
 
 def test_build_index():
     """Test the _build_index function with the actual CSV file."""
@@ -62,7 +69,7 @@ def test_resolve_us_ticker_basic():
         assert result["ticker"] == "AAPL"
         assert result["source"] == "ticker"
         assert "meta" in result
-        assert result["meta"]["company_name"] == "Apple Inc."
+        assert result["meta"]["company_name"] == "Apple Inc"
 
     # Exact company name
     result = resolve_us_ticker_basic("Apple Inc.")
@@ -87,3 +94,5 @@ def test_resolve_us_ticker_basic():
     # None query
     result = resolve_us_ticker_basic(None)
     assert result == {"status": "not_found"}
+
+
