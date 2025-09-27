@@ -2,6 +2,7 @@ import fuzzywuzzy
 from fuzzywuzzy import process
 from collections import defaultdict
 from resources.trusted_sources import trusted_sources
+from src.models.alpha_vintage_api import av_time_series_daily
 
 
 def is_trusted_source(source, threshold):
@@ -35,3 +36,22 @@ def filtered_articles(article_list):
         and is_trusted_source(article.get("source", {}).get("name", ""), 0)
     ]
     return filtered_article_list
+
+def format_av_time_series_data(data):
+    """
+    Format the 'Monthly Time Series' data into a date-wise structure.
+    """
+    if "Monthly Time Series" not in data:
+        raise ValueError("The data does not contain 'Monthly Time Series'.")
+
+    # Extract the time series data
+    av_monthlay_data = data["Monthly Time Series"]
+
+    # Create a list of rows with date and corresponding values
+    formatted_av_data = []
+    for date, values in av_monthlay_data.items():
+        row = {"date": date}
+        row.update(values)
+        formatted_av_data.append(row)
+
+    return formatted_av_data
