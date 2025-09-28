@@ -151,6 +151,6 @@ def test_get_av_daily_data_happy_path():
     # print result
     print(result)
     # Assertions
-    assert "meta" in result and isinstance(result["meta"], dict), "meta should be present and a dict"
+    assert "Meta Data" in result and isinstance(result["Meta Data"], dict), "meta should be present and a dict"
 
     
