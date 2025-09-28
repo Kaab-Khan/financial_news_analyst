@@ -11,7 +11,7 @@ from src.agent.us_resolver import (
 )
 
 # Path to your actual CSV file
-ACTUAL_CSV_PATH = os.getenv("ticker_us", "resources/tickers_us.csv")
+ACTUAL_CSV_PATH = os.getenv("ticker_us", "resources/ticker_us.csv")
 
 def _assert_csv_present():
     p = pathlib.Path(ACTUAL_CSV_PATH)
@@ -29,7 +29,7 @@ def test_norm():
 def test_load_rows():
     """Test the _load_rows function with the actual CSV file."""
     # Ensure the file exists
-    assert os.path.exists(DATA_PATH), f"CSV file not found at {DATA_PATH}"
+    assert os.path.exists(ACTUAL_CSV_PATH), f"CSV file not found at {ACTUAL_CSV_PATH}"
 
     # Load rows from the actual file
     rows = _load_rows()
@@ -59,7 +59,7 @@ def test_build_index():
 
     # Check for a specific ticker (e.g., AAPL)
     if "AAPL" in by_ticker:
-        assert by_ticker["AAPL"]["company_name"] == "Apple Inc."
+        assert by_ticker["AAPL"]["company_name"] == "Apple Inc"
 
 def test_resolve_us_ticker_basic():
     """Test the resolve_us_ticker_basic function with the actual CSV file."""
