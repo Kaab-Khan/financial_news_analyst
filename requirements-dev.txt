@@ -30,3 +30,5 @@ torch
 sentencepiece
 python-dotenv
 yfinance==0.2.43
+psycopg2
+sqlalchemy

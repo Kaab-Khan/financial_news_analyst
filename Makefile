@@ -79,3 +79,6 @@ endif
 test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 # clean:
+# Initialize the local Postgres DB using schema.sql
+db-init:
+	psql -U postgres -d finance_db -f resources/schema.sql
