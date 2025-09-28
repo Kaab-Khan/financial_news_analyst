@@ -35,3 +35,21 @@ def filtered_articles(article_list):
         and is_trusted_source(article.get("source", {}).get("name", ""), 0)
     ]
     return filtered_article_list
+def format_av_daily_data(data):
+    """
+    This function takes a list of dictionaries as input and formats the data
+    to match the database schema.
+    """
+    formatted_data = []
+    for entry in data:
+        formatted_entry = {
+            "date": entry.get("date"),
+            "open": float(entry.get("open", 0)),
+            "high": float(entry.get("high", 0)),
+            "low": float(entry.get("low", 0)),
+            "close": float(entry.get("close", 0)),
+            "adjusted_close": float(entry.get("adjusted_close", 0)),
+            "volume": int(entry.get("volume", 0)),
+        }
+        formatted_data.append(formatted_entry)
+    return formatted_data
