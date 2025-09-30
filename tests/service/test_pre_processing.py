@@ -69,8 +69,8 @@ def test_format_av_daily_data():
 
     # Expected output
     expected_output = [
-        {"date": "2025-09-28", "open": 150.0, "high": 155.0, "low": 149.0, "close": 154.0, "adjusted_close": 0.0, "volume": 1000000},
-        {"date": "2025-09-27", "open": 151.0, "high": 156.0, "low": 150.0, "close": 155.0, "adjusted_close": 0.0, "volume": 2000000},
+        {"date": datetime.date(2025, 9, 28), "open": 150.0, "high": 155.0, "low": 149.0, "close": 154.0, "adjusted_close": 0.0, "volume": 1000000},
+        {"date": datetime.date(2025, 9, 27), "open": 151.0, "high": 156.0, "low": 150.0, "close": 155.0, "adjusted_close": 0.0, "volume": 2000000},
     ]
 
     # Call the function
