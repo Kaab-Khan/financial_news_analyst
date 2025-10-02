@@ -1,5 +1,4 @@
 import json
-import os
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -14,17 +13,17 @@ def filter_relevant_articles(articles, api_key: str | None = None) -> list[dict]
     filters only the most relevant ones.
     """
     prompt = """
-    #Role: 
-    You are an AI financial news assistant with expertise in markets, 
+    #Role:
+    You are an AI financial news assistant with expertise in markets,
     investments and global economny.
     ##Task:
-    - Your task is to analyze the provided news articles and select only 
+    - Your task is to analyze the provided news articles and select only
     those that are **highly relevant** to investment, financial analysis
-    and policy makers about {relelvant_stock}. 
+    and policy makers about {relevant_stock}.
     ### Selection Criteria:
     1- Market impact: Market Impact** – Does the article influence
     financial markets, stocks, commodities, or major economic trends?
-    2- Investment Relevance** – Would an investor, hedge fund manager, 
+    2- Investment Relevance** – Would an investor, hedge fund manager,
     or analyst find this news actionable?
     3- Credible Source** – Does it come from a well-regarded financial publication?
     4- Avoid General News** – Ignore irrelevant articles (e.g.,
@@ -42,7 +41,6 @@ def filter_relevant_articles(articles, api_key: str | None = None) -> list[dict]
     prompt += formatted_articles + (
         "\n\n **Instructions:**\n*"
         "- Returns only the **most relevant articles that meet the criteria above. \n"
-        
         "-Keep the format **strictly as JSON** like this:\n"
         "'''json\n"
         '[{"title": "Example Title", "url": "https://example.com","source":"Reuters"}]\n'
@@ -51,7 +49,7 @@ def filter_relevant_articles(articles, api_key: str | None = None) -> list[dict]
     )
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not provided.")
-    
+
     client = OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model="gpt-4o-mini",

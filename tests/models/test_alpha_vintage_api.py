@@ -152,5 +152,12 @@ def test_get_av_daily_data_happy_path():
     print(result)
     # Assertions
     assert "Meta Data" in result and isinstance(result["Meta Data"], dict), "meta should be present and a dict"
-
+    assert "Time Series (Daily)" in result and isinstance(result["Time Series (Daily)"], dict), "time_series should be present and a dict"
+    assert len(result["Time Series (Daily)"]) > 0, "time_series should have at least one entry"
+    assert ticker == result["Meta Data"].get("2. Symbol"), f"Symbol in meta should match requested ticker '{ticker}'"
+    # Check a sample entry
+    sample_date, sample_values = next(iter(result["Time Series (Daily)"].items()))
+    assert re.match(r"\d{4}-\d{2}-\d{2}", sample_date), f"date '{sample_date}' should match YYYY-MM-DD"
     
+
+

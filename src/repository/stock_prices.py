@@ -1,10 +1,11 @@
 import logging
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional
 from datetime import date
 from psycopg2.extras import RealDictCursor
 from src.config.db_config import DatabaseConfig
 
 logger = logging.getLogger(__name__)
+
 
 class OhlcvRepository:
     def __init__(self):
@@ -25,7 +26,7 @@ class OhlcvRepository:
             for row in rows:
                 cur.execute(
                     """
-                    INSERT INTO ohlcv_daily 
+                    INSERT INTO ohlcv_daily
                         (symbol, date, open, high, low, close, adjusted_close, volume)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (symbol, date) DO UPDATE

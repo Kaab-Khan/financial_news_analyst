@@ -1,30 +1,38 @@
 # src/agent/us_resolver.py
 from __future__ import annotations
-import csv, os, re
+import csv
+import os
+import re
 from functools import lru_cache
 from typing import Dict, List, Tuple
 
 DATA_PATH = os.getenv("US_TICKERS_CSV", "resources/ticker_us.csv")
 _TICKER_RE = re.compile(r"^[A-Z.-]{1,6}$")
 
+
 def _norm(s: str) -> str:
     """Lowercase + strip non-alphanum to normalize names for matching."""
     import re
+
     return re.sub(r"[^a-z0-9 ]+", " ", s.lower()).strip()
+
 
 def _load_rows() -> List[Dict[str, str]]:
     """Read rows from CSV and standardize fields."""
     with open(DATA_PATH, newline="", encoding="utf-8") as f:
         rdr = csv.DictReader(f)
-        rows: List[Dict[str,str]] = []
+        rows: List[Dict[str, str]] = []
         for r in rdr:
-            rows.append({
-                "ticker": (r.get("ticker") or "").strip().upper(),
-                "company_name": (r.get("company_name") or "").strip(),
-                "exchange": (r.get("exchange") or "").strip().upper(),
-                "aliases": (r.get("aliases") or "").strip(),
-            })
+            rows.append(
+                {
+                    "ticker": (r.get("ticker") or "").strip().upper(),
+                    "company_name": (r.get("company_name") or "").strip(),
+                    "exchange": (r.get("exchange") or "").strip().upper(),
+                    "aliases": (r.get("aliases") or "").strip(),
+                }
+            )
         return rows
+
 
 @lru_cache(maxsize=1)
 def _build_index():
@@ -53,6 +61,7 @@ def _build_index():
                     alias_index.append((_norm(alias), tkr, r))
 
     return by_ticker, name_index, alias_index
+
 
 @lru_cache(maxsize=1024)
 def resolve_us_ticker_basic(query: str) -> Dict:

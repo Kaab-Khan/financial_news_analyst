@@ -1,11 +1,6 @@
-import fuzzywuzzy
 from fuzzywuzzy import process
-from collections import defaultdict
 from resources.trusted_sources import trusted_sources
-from src.models.alpha_vintage_api import get_av_daily_data
-import os
-import sys
-import datetime
+from datetime import datetime
 from typing import List, Dict
 
 
@@ -41,7 +36,6 @@ def filtered_articles(article_list):
     ]
     return filtered_article_list
 
-from datetime import datetime
 
 def format_av_daily_data(data):
     """
@@ -53,18 +47,21 @@ def format_av_daily_data(data):
 
     for date, values in time_series.items():
         formatted_entry = {
-            "date": datetime.strptime(date, "%Y-%m-%d").date(),  # Convert date to datetime.date
+            "date": datetime.strptime(
+                date, "%Y-%m-%d"
+            ).date(),  # Convert date to datetime.date
             "open": float(values.get("1. open", 0)),
             "high": float(values.get("2. high", 0)),
             "low": float(values.get("3. low", 0)),
             "close": float(values.get("4. close", 0)),
-            "adjusted_close": float(values.get("5. adjusted close", 0)),  # Use "5. adjusted close" if available
+            "adjusted_close": float(
+                values.get("5. adjusted close", 0)
+            ),  # Use "5. adjusted close" if available
             "volume": int(values.get("5. volume", 0)),
         }
         formatted_data.append(formatted_entry)
 
     return formatted_data
-
 
 
 # def filter_ohlcv_by_range(
@@ -90,9 +87,8 @@ def format_av_daily_data(data):
 #     filtered.sort(key=lambda x: x["date"], reverse=True)
 #     return filtered
 
-def filter_ohlcv_by_range(
-    data: List[Dict], start_date: datetime.date, end_date: datetime.date
-) -> List[Dict]:
+
+def filter_ohlcv_by_range(data: List[Dict], start_date, end_date) -> List[Dict]:
     """
     Filters OHLCV data for the given date range [start_date, end_date].
     If no data is available for the range, returns the nearest available data.
@@ -131,15 +127,32 @@ def filter_ohlcv_by_range(
         failsafe_data = []
         if nearest_before:
             failsafe_data.append(
-                {"date": nearest_before["date"], "open": nearest_before["open"], "high": nearest_before["high"], "low": nearest_before["low"], "close": nearest_before["close"], "adjusted_close": nearest_before["adjusted_close"], "volume": nearest_before["volume"]}
+                {
+                    "date": nearest_before["date"],
+                    "open": nearest_before["open"],
+                    "high": nearest_before["high"],
+                    "low": nearest_before["low"],
+                    "close": nearest_before["close"],
+                    "adjusted_close": nearest_before["adjusted_close"],
+                    "volume": nearest_before["volume"],
+                }
             )
         if nearest_after:
             failsafe_data.append(
-                {"date": nearest_after["date"], "open": nearest_after["open"], "high": nearest_after["high"], "low": nearest_after["low"], "close": nearest_after["close"], "adjusted_close": nearest_after["adjusted_close"], "volume": nearest_after["volume"], "close": nearest_after["close"]}
+                {
+                    "date": nearest_after["date"],
+                    "open": nearest_after["open"],
+                    "high": nearest_after["high"],
+                    "low": nearest_after["low"],
+                    "close": nearest_after["close"],
+                    "adjusted_close": nearest_after["adjusted_close"],
+                    "volume": nearest_after["volume"],
+                }
             )
         return failsafe_data
 
     return filtered
+
 
 def aggregate_price_change(filtered_data: List[Dict]) -> Dict:
     """

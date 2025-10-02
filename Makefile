@@ -56,7 +56,7 @@ requirements: test_environment
 # Format code using black
 quality:
 	black src
-	flake8 src --ignore=E501, W503
+	flake8 src --ignore=E501,W503
     
 create_environment:
 ifeq (True,$(HAS_CONDA))

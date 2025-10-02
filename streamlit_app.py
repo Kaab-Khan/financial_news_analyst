@@ -2,11 +2,27 @@ import os
 import json
 import datetime as dt
 import streamlit as st
+from logging_config import logger
+import logging
 
+# Set the logging level for your application
+logging.basicConfig(level=logging.INFO)  # Change DEBUG to INFO or WARNING for less verbosity
+
+# Suppress logs from noisy libraries
+logging.getLogger("watchdog").setLevel(logging.WARNING)  # Suppress inotify events
+logging.getLogger("streamlit").setLevel(logging.WARNING)  # Suppress Streamlit logs
+logging.getLogger("urllib3").setLevel(logging.WARNING)    # Suppress urllib3 logs
+
+# Your custom logger
+from logging_config import logger
+logger.setLevel(logging.DEBUG)  # Keep DEBUG for your application-specific logs
 # your pipeline
+
 from src.pipeline.run_pipeline import run_pipeline
+from src.service.pre_processing import aggregate_price_change
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+ALPHA_VINTAGE_API_KEY = os.getenv("ALPHA_VINTAGE_API_KEY")
 
 # -------------------------
 # page config
@@ -36,14 +52,12 @@ st.markdown("""
 # header
 # -------------------------
 st.title("📰 Financial News Sentiment")
-st.caption("Fetches news by company name → filters for investment relevance → FinBERT on title+description → aggregates to a 0–100 sentiment.")
+st.caption("Fetches news by company name → filters for investment relevance → FinBERT on title+description → aggregates to a 0–100 sentiment." \
+"Stok prices over the same period are fetched from Alpha Vantage.")
 
 # -------------------------
 # sidebar controls
 # -------------------------
-# --- sidebar controls ---
-
-# --- Ask user for their own OpenAI key
 with st.sidebar:
     st.header("🔑 API Settings")
     user_openai_key = st.text_input(
@@ -52,21 +66,17 @@ with st.sidebar:
         help="Your key is only used for this session and not stored."
     )
 
-    # Decide which key to use
     if user_openai_key:
         OPENAI_API_KEY = user_openai_key.strip()
     else:
         st.warning("⚠️ Please enter your own OpenAI API key in the sidebar to run live analysis.")
         st.stop()
 
-    # Company name
     default_query = st.session_state.get("default_query", "Enter a stock name")
     query = st.text_input("Company name", value=default_query, placeholder="e.g., Tesla, Apple, NVIDIA")
-    st.caption("Pleas write full company name")
+    st.caption("Please write the full company name")
     st.session_state["default_query"] = query
 
-    # Date range (max 31 days)
-    import datetime as dt
     today = dt.date.today()
     max_lookback = today - dt.timedelta(days=31)
 
@@ -77,53 +87,106 @@ with st.sidebar:
     with col_b:
         date_to = st.date_input("To", value=today, min_value=max_lookback, max_value=today)
 
-    # Enforce max 31 days window
     if (date_to - date_from).days > 31:
         st.warning("Range exceeds 31 days. It will be clipped to the last 31 days.")
 
     run_btn = st.button("Run", type="primary", use_container_width=True)
 
-
 # -------------------------
 # helpers
 # -------------------------
+def _badge(tag: str) -> str:
+    """
+    Returns an HTML badge for the given sentiment tag.
+    """
+    tag = tag.lower()
+    if tag == "bullish":
+        return '<span class="badge bullish">Bullish</span>'
+    elif tag == "bearish":
+        return '<span class="badge bearish">Bearish</span>'
+    else:
+        return '<span class="badge neutral">Neutral</span>'
+
+def _dl_bytes(result: dict) -> bytes:
+    """
+    Converts the result dictionary to a JSON string and encodes it as bytes.
+    Handles datetime/date serialization by converting to ISO string.
+    """
+    def _default(o):
+        if isinstance(o, (dt.date, dt.datetime)):
+            return o.isoformat()
+        return str(o)  # fallback for other exotic objects
+
+    return json.dumps(result, indent=4, default=_default).encode("utf-8")
+
+def _md_report(result: dict) -> str:
+    """
+    Generates a Markdown report from the result dictionary.
+    """
+    report = f"# Sentiment Analysis Report for {result['query']}\n\n"
+    report += f"**Overall Sentiment:** {result['aggregate']['overall_tag']}\n\n"
+    report += f"**Score:** {result['aggregate']['score_0_100']}/100\n\n"
+    report += "## Stock Price and Percentage Change\n"
+    price_change = result.get("price_change", {})
+    if price_change:
+        report += f"- **Start Date:** {price_change.get('start_date')}\n"
+        report += f"- **End Date:** {price_change.get('end_date')}\n"
+        report += f"- **Start Price:** ${price_change.get('start_price')}\n"
+        report += f"- **End Price:** ${price_change.get('end_price')}\n"
+        report += f"- **Percentage Change:** {price_change.get('percentage_change')}%\n"
+    else:
+        report += "No stock price data available for the selected period.\n"
+
+    report += "\n## Relevant Articles\n"
+    for article in result["articles"]:
+        report += f"- **Source:** {article.get('source', 'Unknown')}\n"
+        report += f"  - **Title:** {article.get('title', 'No Title')}\n"
+        report += f"  - **Sentiment:** {article.get('sentiment_label', 'Unknown')} ({article.get('sentiment_conf', 0):.2f})\n"
+        report += f"  - **URL:** {article.get('url', 'No URL')}\n\n"
+
+    return report
+
 @st.cache_data(show_spinner=False, ttl=15*60)
-def _run(query_str: str, date_from, date_to, openai_key : str) -> dict:
+def _run(query_str: str, date_from, date_to, openai_key: str) -> dict:
+    logger.debug(f"_run called with query_str: {query_str}, date_from: {date_from}, date_to: {date_to}")
+
     if (date_to - date_from).days > 31:
         date_from = date_to - dt.timedelta(days=31)
     if date_from > date_to:
         date_from = date_to
-    return run_pipeline(query_str, date_from=date_from, date_to=date_to, openai_api_key=openai_key)
 
+    # Run your pipeline
+    result = run_pipeline(query_str, date_from=date_from, date_to=date_to, openai_api_key=openai_key)
 
-def _badge(tag: str) -> str:
-    m = {
-        "Bullish": "bullish",
-        "Bearish": "bearish",
-        "Neutral": "neutral",
-    }
-    cls = m.get(tag, "neutral")
-    return f'<span class="badge {cls}">{tag}</span>'
+    # Try to get structured stock data first
+    stock_data = result.get("stock_data", [])
+    price_change = aggregate_price_change(stock_data)
 
-def _dl_bytes(data: dict) -> bytes:
-    return json.dumps(data, indent=2, ensure_ascii=False).encode("utf-8")
+    # Normalize into one schema
+    if price_change and all(k in price_change for k in ["first_day", "last_day", "first_price", "last_price"]):
+        normalized = {
+            "first_day": price_change.get("first_day"),
+            "last_day": price_change.get("last_day"),
+            "first_price": price_change.get("first_price"),
+            "last_price": price_change.get("last_price"),
+            "percentage_change": price_change.get("percentage_change"),
+        }
+    else:
+        # fallback to values from run_pipeline
+        logger.warning("Price change data is empty or malformed. Using fallback values.")
+        start = result.get("Stock Price Start")
+        end = result.get("Stock Price End")
+        normalized = {
+            "first_day": date_from,
+            "last_day": date_to,
+            "first_price": start,
+            "last_price": end,
+            "percentage_change": ((end - start) / start * 100) if start else None,
+        }
 
-def _md_report(data: dict) -> str:
-    agg = data["aggregate"]
-    lines = []
-    lines.append(f"# Sentiment Report — {data['query']}")
-    lines.append(f"_Generated: {dt.datetime.utcnow().isoformat()}Z_")
-    lines.append("")
-    lines.append(f"**Overall:** {agg['overall_tag']} ({agg['score_0_100']}/100)")
-    lines.append(f"- Counts: {agg['counts']}")
-    lines.append(f"- Weighted share: {agg['weighted_share']}")
-    lines.append("")
-    lines.append(f"## Articles ({data['count']})")
-    for i, a in enumerate(data["articles"], 1):
-        lines.append(f"{i}. **{a.get('source','')}** — {a.get('title','')}")
-        lines.append(f"   - Sentiment: {a.get('sentiment_label','-')} ({a.get('sentiment_conf',0):.2f})")
-        lines.append(f"   - Link: {a.get('url','')}")
-    return "\n".join(lines)
+    result["price_change"] = normalized
+    logger.debug(f"Final result: {result}")
+    return result
 
 # -------------------------
 # main panel
@@ -132,9 +195,6 @@ if run_btn:
     if not query.strip():
         st.warning("Please type a company name.")
         st.stop()
-    # if not os.getenv("OPENAI_API_KEY"):
-    #     st.error("OPENAI_API_KEY is not set. Export it in your shell and relaunch.")
-    #     st.stop()
 
     with st.spinner(f"Finding relevant news for '{query}'..."):
         try:
@@ -143,12 +203,10 @@ if run_btn:
             st.exception(e)
             st.stop()
 
-    # overall metrics
     agg = result["aggregate"]
     tag = agg["overall_tag"]
     score = agg["score_0_100"]
 
-    # top summary row
     left, mid, right = st.columns([1.2, 1, 1])
     with left:
         st.subheader(f"Overall for '{result['query']}' {tag}")
@@ -159,20 +217,32 @@ if run_btn:
                   value=f"{int(agg['weighted_share']['positive']*100)}% / {int(agg['weighted_share']['neutral']*100)}% / {int(agg['weighted_share']['negative']*100)}%")
         st.caption(str(agg["counts"]))
     with right:
-        st.progress(int(score))  # simple visual bar (0-100)
+        st.progress(int(score))
+
+    st.divider()
+    # -------------------------
+    # section for stock price change
+    # -------------------------
+    st.subheader("📈 Stock Price and Percentage Change")
+    price_change = result.get("price_change", {})
+    if price_change:
+        st.write(f"**Start Date:** {price_change.get('first_day')}")
+        st.write(f"**End Date:** {price_change.get('last_day')}")
+        st.write(f"**Start Price:** ${price_change.get('first_price')}")
+        st.write(f"**End Price:** ${price_change.get('last_price')}")
+        st.write(f"**Percentage Change:** {price_change.get('percentage_change')}%")
+    else:
+        st.warning("No stock price data available for the selected period.")
 
     st.divider()
 
-    # articles table
     st.subheader(f"Relevant Articles ({result['count']})")
-
-    # Convert to a lightweight table with clickable links
     table_rows = []
     for a in result["articles"]:
         link = a.get("url") or ""
-        source = a.get("source","")
-        title = a.get("title","")
-        sent = f"{a.get('sentiment_label','-')} ({a.get('sentiment_conf',0):.2f})"
+        source = a.get("source", "")
+        title = a.get("title", "")
+        sent = f"{a.get('sentiment_label', '-')} ({a.get('sentiment_conf', 0):.2f})"
         table_rows.append({
             "Source": source,
             "Title": title,
@@ -182,7 +252,6 @@ if run_btn:
 
     st.dataframe(table_rows, use_container_width=True, hide_index=True)
 
-    # downloads
     st.markdown("### Save this run")
     col1, col2 = st.columns(2)
     with col1:

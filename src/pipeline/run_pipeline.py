@@ -7,24 +7,33 @@ Flow:
 """
 
 from __future__ import annotations
-import os
+from logging_config import logger
 from typing import Dict, Any, List
 import datetime as dt
 from typing import Optional
+from src.pipeline.price_pipeline import price_pipeline
 
 # --- your modules (adjust paths if needed) ---
 from src.models.news_api import get_news_articles_urls
+
 # Support either extractor name you used
 try:
-    from src.models.news_api import extract_title_url_content as extract_titles, normalize_minimal
+    from src.models.news_api import (
+        extract_title_url_content as extract_titles,
+    )
 except Exception:
-    from src.models.news_api import extract_title_and_urls as extract_titles, normalize_minimal
+    from src.models.news_api import (
+        extract_title_and_urls as extract_titles,
+    )
 
-from src.service.pre_processing import filtered_articles              # your trusted filter
-from src.service.openai import filter_relevant_articles              # your OpenAI filter
-     # FinBERT title+desc
-from src.service.sentiment_finBERT import enrich_with_sentiment     # FinBERT enrich
-from src.service.sentiment_finBERT import aggregate_sentiment      # 0..100 aggregator
+from src.service.pre_processing import filtered_articles  # your trusted filter
+from src.service.openai import filter_relevant_articles  # your OpenAI filter
+
+# FinBERT title+desc
+from src.service.sentiment_finBERT import enrich_with_sentiment  # FinBERT enrich
+from src.service.sentiment_finBERT import aggregate_sentiment  # 0..100 aggregator
+
+
 def _to_datestr(d):
     # Accepts datetime.date, datetime.datetime, or already-a-string
     if d is None:
@@ -34,6 +43,7 @@ def _to_datestr(d):
     # if it's a string like '2025-08-23T00:00:00', trim to 'YYYY-MM-DD'
     s = str(d).strip()
     return s[:10]  # defensive: first 10 chars are YYYY-MM-DD
+
 
 def _clip_dates(date_from: dt.date, date_to: dt.date) -> tuple[dt.date, dt.date]:
     """Ensure window is within the last 31 days and not inverted."""
@@ -47,6 +57,7 @@ def _clip_dates(date_from: dt.date, date_to: dt.date) -> tuple[dt.date, dt.date]
         date_from = date_to
     return date_from, date_to
 
+
 def _parse_published_at(value) -> Optional[dt.datetime]:
     """Best-effort parse string/naive datetime -> naive datetime (UTC-ish)."""
     if value is None:
@@ -59,12 +70,14 @@ def _parse_published_at(value) -> Optional[dt.datetime]:
     except Exception:
         return None
 
+
 def _within_range(art: dict, dfrom: dt.date, dto: dt.date) -> bool:
     pub = _parse_published_at(art.get("published_at"))
     if not pub:
         return True  # keep if unknown date
     d = pub.date()
-    return (dfrom <= d <= dto)
+    return dfrom <= d <= dto
+
 
 def run_pipeline(
     company_name: str,
@@ -88,14 +101,21 @@ def run_pipeline(
         "date_to":   "YYYY-MM-DD" | None,
         "count": int,
         "articles": [...],
-        "aggregate": {...}
+        "aggregate_sentiment": {...}
+        " percentage_change": float (0..100) | None,
+        "Stock Price Start: Open price at start date, if available
+        "Stock Price End: Close price at end date, if available
+
       }
     """
-#    api_key = os.getenv("OPENAI_API_KEY")
+    #    api_key = os.getenv("OPENAI_API_KEY")
     # if not api_key:
     #     raise RuntimeError("OPENAI_API_KEY not set. `export OPENAI_API_KEY=...`")
 
     # Normalize/clip dates (max 31 days)
+    logger.debug(
+        f"run_pipeline called with company_name: {company_name}, date_from: {date_from}, date_to: {date_to}"
+    )
     if date_from and date_to:
         date_from, date_to = _clip_dates(date_from, date_to)
 
@@ -112,17 +132,17 @@ def run_pipeline(
     # except TypeError:
     #     # Your fetcher doesn't accept date params; fall back to no-date fetch
     #     raise RuntimeError("The fetcher function must accept date_from and date_to parameters.")
-        # raw = get_news_articles_urls(
-        #     query=company_name,
-        #     date_from=(str(date_from)[:10] if date_from else None),
-        #     date_to=(str(date_to)[:10] if date_to else None),
-        # )
+    # raw = get_news_articles_urls(
+    #     query=company_name,
+    #     date_from=(str(date_from)[:10] if date_from else None),
+    #     date_to=(str(date_to)[:10] if date_to else None),
+    # )
 
     # 2) Extract minimal fields
     extracted = extract_titles(raw)
 
     # 3) Normalize
-    #rows = normalize_minimal(extracted)
+    # rows = normalize_minimal(extracted)
 
     # 3b) Local filter by date range if needed
     if date_from and date_to:
@@ -132,15 +152,29 @@ def run_pipeline(
     trusted = filtered_articles(rows)
 
     # 5) LLM relevance (OpenAI) — keep only relevant
-    final_articles: List[Dict[str, Any]] = filter_relevant_articles(trusted, api_key=openai_api_key)
+    final_articles: List[Dict[str, Any]] = filter_relevant_articles(
+        trusted, api_key=openai_api_key
+    )
 
-
-  # 6- FinBET Sentiment
+    # 6- FinBET Sentiment
     enriched_articles = enrich_with_sentiment(final_articles)
-  # 7- Aggregate to a 0..100 score + tag
+    # 7- Aggregate to a 0..100 score + tag
 
     agg = aggregate_sentiment(enriched_articles)
 
+    # 8- Stock price change over the period (if date_from/date_to given)
+    stock_date = (
+        price_pipeline(
+            company_name,
+            date_from=_to_datestr(date_from) if date_from else None,
+            date_to=_to_datestr(date_to) if date_to else None,
+        )
+        if date_from and date_to
+        else {}
+    )
+    logger.debug(
+        f"Pipeline result: {{'query': {company_name}, 'price_change': {stock_date.get('percentage_change')}, ...}}"
+    )
     return {
         "query": company_name,
         "date_from": date_from.isoformat() if date_from else None,
@@ -148,7 +182,11 @@ def run_pipeline(
         "count": len(final_articles),
         "articles": final_articles,
         "aggregate": agg,
+        "price_change": stock_date["percentage_change"] if stock_date else None,
+        "Stock Price Start": stock_date["first_price"] if stock_date else None,
+        "Stock Price End": stock_date["last_price"] if stock_date else None,
     }
+
 
 # def run_pipeline(company_name: str) -> Dict[str, Any]:
 #     """

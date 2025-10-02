@@ -1,11 +1,13 @@
+import sys
 from agent.us_resolver import resolve_us_ticker_basic
 from models.alpha_vintage_api import av_symbol_search
 from typing import Optional, Dict
-import os, sys
+import os
 
 query = "Apple"
 ALPHA_VINTAGE_API_KEY = os.getenv("ALPHA_VINTAGE_API_KEY")
 ALPHA_VINTAGE_API_URL = os.getenv("ALPHA_VINTAGE_API_URL")
+
 
 def av_ticker_lookup(query: str) -> Optional[Dict]:
     """
@@ -16,7 +18,10 @@ def av_ticker_lookup(query: str) -> Optional[Dict]:
     or None if no good match.
     """
     if not ALPHA_VINTAGE_API_KEY or not ALPHA_VINTAGE_API_URL:
-        print("Alpha Vantage API key or URL not set in environment variables.", file=sys.stderr)
+        print(
+            "Alpha Vantage API key or URL not set in environment variables.",
+            file=sys.stderr,
+        )
         return None
         # First try to resolve using US resolver
     us_res = resolve_us_ticker_basic(query)

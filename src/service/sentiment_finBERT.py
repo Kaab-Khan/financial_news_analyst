@@ -1,10 +1,12 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from functools import lru_cache
 import torch
-from typing import List, Dict
+from typing import List
+from typing import Dict
 
 MODEL_ID = "ProsusAI/finbert"
 LABELS = ["negative", "neutral", "positive"]
+
 
 @lru_cache(maxsize=1)
 def _load():
@@ -14,10 +16,11 @@ def _load():
     mdl.to(device).eval()
     return tok, mdl, device
 
+
 def score_text(text: str) -> Dict:
     """Return {'label','confidence','probs'} using FinBERT on title/snippet."""
     if not text:
-        return {"label":"neutral","confidence":0.0,"probs":[0.33,0.34,0.33]}
+        return {"label": "neutral", "confidence": 0.0, "probs": [0.33, 0.34, 0.33]}
     tok, mdl, device = _load()
     inputs = tok(text[:2000], truncation=True, return_tensors="pt").to(device)
     with torch.no_grad():
@@ -26,27 +29,32 @@ def score_text(text: str) -> Dict:
     idx = int(max(range(3), key=lambda i: probs[i]))
     return {"label": LABELS[idx], "confidence": float(probs[idx]), "probs": probs}
 
+
 def label_to_score(label: str, conf: float) -> float:
     """Map to [-1,1] numeric sentiment for scoring."""
-    base = {"positive":1.0, "neutral":0.0, "negative":-1.0}.get(label, 0.0)
+    base = {"positive": 1.0, "neutral": 0.0, "negative": -1.0}.get(label, 0.0)
     return base * float(conf)
+
 
 def enrich_with_sentiment(articles: List[Dict]) -> List[Dict]:
     """Mutates each article adding sentiment_label/conf/score."""
     for a in articles:
-        title = a.get("title","")
+        title = a.get("title", "")
         description = a.get("summary") or a.get("description") or a.get("body") or ""
         res = score_text((title + ". " + description).strip())
         a["sentiment_label"] = res["label"]
-        a["sentiment_conf"]  = res["confidence"]
+        a["sentiment_conf"] = res["confidence"]
         a["sentiment_score"] = label_to_score(res["label"], res["confidence"])
     return articles
+
+
 def get_sentiment_scores(articles: List[Dict]) -> List[Dict]:
     """
     Returns a list of articles with sentiment scores.
     Each article will have 'sentiment_label', 'sentiment_conf', and 'sentiment_score'.
     """
     return enrich_with_sentiment(articles)
+
 
 """
 Aggregate sentiment (simple version).
@@ -55,7 +63,6 @@ Aggregate sentiment (simple version).
 - Final score in [0, 100] (0 = fully bearish, 50 = neutral, 100 = fully bullish)
 """
 
-from typing import List, Dict
 
 def label_to_signed(label: str | None, conf: float | None) -> float:
     """
@@ -68,6 +75,7 @@ def label_to_signed(label: str | None, conf: float | None) -> float:
         return 0.0
     base = {"positive": 1.0, "neutral": 0.0, "negative": -1.0}.get(label, 0.0)
     return base * float(conf)
+
 
 def aggregate_sentiment(articles: List[Dict]) -> Dict:
     """
@@ -100,10 +108,10 @@ def aggregate_sentiment(articles: List[Dict]) -> Dict:
 
     for a in articles:
         label = a.get("sentiment_label")
-        conf  = float(a.get("sentiment_conf", 0.0) or 0.0)
+        conf = float(a.get("sentiment_conf", 0.0) or 0.0)
 
         signed = label_to_signed(label, conf)  # [-1,1]
-        w = conf                              # weight = confidence only
+        w = conf  # weight = confidence only
 
         sum_w += w
         sum_wsigned += w * signed
@@ -119,12 +127,17 @@ def aggregate_sentiment(articles: List[Dict]) -> Dict:
         return {
             "score_0_100": 50.0,
             "overall_tag": "Neutral",
-            "counts": {"positive": 0, "neutral": 0, "negative": 0, "total": len(articles)},
+            "counts": {
+                "positive": 0,
+                "neutral": 0,
+                "negative": 0,
+                "total": len(articles),
+            },
             "weighted_share": {"positive": 0.0, "neutral": 1.0, "negative": 0.0},
         }
 
-    avg_signed = sum_wsigned / sum_w    # [-1,1]
-    score_0_100 = (avg_signed + 1) * 50 # map -1..1 → 0..100
+    avg_signed = sum_wsigned / sum_w  # [-1,1]
+    score_0_100 = (avg_signed + 1) * 50  # map -1..1 → 0..100
 
     # decide tag
     if score_0_100 >= 60:
@@ -138,14 +151,20 @@ def aggregate_sentiment(articles: List[Dict]) -> Dict:
         "score_0_100": round(score_0_100, 1),
         "overall_tag": tag,
         "counts": {
-            "positive": sum(1 for a in articles if a.get("sentiment_label")=="positive"),
-            "neutral":  sum(1 for a in articles if a.get("sentiment_label")=="neutral"),
-            "negative": sum(1 for a in articles if a.get("sentiment_label")=="negative"),
-            "total":    len(articles),
+            "positive": sum(
+                1 for a in articles if a.get("sentiment_label") == "positive"
+            ),
+            "neutral": sum(
+                1 for a in articles if a.get("sentiment_label") == "neutral"
+            ),
+            "negative": sum(
+                1 for a in articles if a.get("sentiment_label") == "negative"
+            ),
+            "total": len(articles),
         },
         "weighted_share": {
-            "positive": round(pos_w/sum_w, 3),
-            "neutral":  round(neu_w/sum_w, 3),
-            "negative": round(neg_w/sum_w, 3),
+            "positive": round(pos_w / sum_w, 3),
+            "neutral": round(neu_w / sum_w, 3),
+            "negative": round(neg_w / sum_w, 3),
         },
     }

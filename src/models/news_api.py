@@ -1,10 +1,9 @@
 import os
 import sys
-from newsapi import NewsApiClient
 from datetime import datetime
 import requests
-import json
-import dotenv
+from typing import List, Dict, Any
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,6 +13,7 @@ sys.path.append(
 )
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "fdac2281006a456d88ae4acccd2490eb")
 NEWS_API_URL = os.getenv("NEWS_API_URL", "https://newsapi.org/v2/everything")
+
 
 def get_news_articles_urls(
     query: str,
@@ -30,7 +30,7 @@ def get_news_articles_urls(
     if not key:
         raise RuntimeError("NEWS_API_KEY not set. export NEWS_API_KEY=...")
 
-    url = (base_url or NEWS_API_URL or "https://newsapi.org/v2/everything")
+    url = base_url or NEWS_API_URL or "https://newsapi.org/v2/everything"
 
     params = {
         "q": (query or "").strip(),
@@ -62,6 +62,7 @@ def get_news_articles_urls(
         raise RuntimeError(f"NewsAPI error: {data}")
 
     return data
+
 
 # NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 # #NEWS_API_URL = os.getenv("NEWS_API_URL")
@@ -119,6 +120,7 @@ def get_news_articles_urls(
 
 #     return data
 
+
 def extract_title_url_content(data: dict):
     """
     Your existing extractor — unchanged, but keep a guard.
@@ -128,29 +130,40 @@ def extract_title_url_content(data: dict):
     for article in articles:
         title = article.get("title", "No title available")
         source = article.get("source", {})
-        source_name = source.get("name") if isinstance(source, dict) else (source or "No source available")
+        source_name = (
+            source.get("name")
+            if isinstance(source, dict)
+            else (source or "No source available")
+        )
         url = article.get("url", "No url available")
         description = article.get("description", "")
         content = article.get("content", "")
         title_url_content.append(
-            {"title": title, "source": source_name, "url": url, "description": description, "content": content}
+            {
+                "title": title,
+                "source": source_name,
+                "url": url,
+                "description": description,
+                "content": content,
+            }
         )
     return title_url_content
 
 
-def extract_title_and_urls(data):
-    articles = data["articles"]
-    title_and_urls = []
-    for article in articles:
-        title = article.get("title", "No title available")
-        source = article.get("source", "No source available")
-        url = article.get("url", "No url available")
-        description = article.get("description", "No description available")
-        title_and_urls.append(
-            {"title": title, "source": source, "url": url, "description": description}
-        )
+# def extract_title_and_urls(data):
+#     articles = data["articles"]
+#     title_and_urls = []
+#     for article in articles:
+#         title = article.get("title", "No title available")
+#         source = article.get("source", "No source available")
+#         url = article.get("url", "No url available")
+#         description = article.get("description", "No description available")
+#         title_and_urls.append(
+#             {"title": title, "source": source, "url": url, "description": description}
+#         )
 
-    return title_and_urls
+#     return title_and_urls
+
 
 def extract_title_url_content(data):
     articles = data["articles"]
@@ -162,10 +175,17 @@ def extract_title_url_content(data):
         description = article.get("description", "No description available")
         content = article.get("content", "No content available")
         title_url_content.append(
-            {"title": title, "source": source, "url": url, "description": description, "content": content}
+            {
+                "title": title,
+                "source": source,
+                "url": url,
+                "description": description,
+                "content": content,
+            }
         )
 
     return title_url_content
+
 
 def print_news_articles(stock_name):
     data = get_news_articles_urls(stock_name)
@@ -182,8 +202,6 @@ def print_news_articles(stock_name):
     print("\n" * 5)
     return
 
-from typing import List, Dict, Any
-from urllib.parse import urlparse
 
 def normalize_minimal(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
@@ -201,7 +219,7 @@ def normalize_minimal(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     for r in rows:
         # title / description
         title = (r.get("title") or "").strip()
-        desc  = (r.get("description") or "").strip()
+        desc = (r.get("description") or "").strip()
 
         # url
         url = r.get("url") or ""
@@ -221,23 +239,20 @@ def normalize_minimal(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 # clean common prefixes
                 for pref in ("www.", "m.", "amp."):
                     if domain.startswith(pref):
-                        domain = domain[len(pref):]
+                        domain = domain[len(pref) :]
             except Exception:
                 pass
 
         # publishedAt / published_at
-        published_at = (
-            r.get("publishedAt") or
-            r.get("published_at") or
-            None
+        published_at = r.get("publishedAt") or r.get("published_at") or None
+        out.append(
+            {
+                "title": title,
+                "description": desc,
+                "url": url,
+                "source": source_name,
+                "domain": domain,
+                "published_at": published_at,
+            }
         )
-
-        out.append({
-            "title": title,
-            "description": desc,
-            "url": url,
-            "source": source_name,
-            "domain": domain,
-            "published_at": published_at,
-        })
     return out
