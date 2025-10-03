@@ -28,7 +28,7 @@ ALPHA_VINTAGE_API_KEY = os.getenv("ALPHA_VINTAGE_API_KEY")
 # page config
 # -------------------------
 st.set_page_config(
-    page_title="News Sentiment (Title+Description)",
+    page_title="News Sentiment (Title+Description) & Stock Prices",
     page_icon="📰",
     layout="wide",
 )
@@ -87,8 +87,8 @@ with st.sidebar:
     with col_b:
         date_to = st.date_input("To", value=today, min_value=max_lookback, max_value=today)
 
-    if (date_to - date_from).days > 31:
-        st.warning("Range exceeds 31 days. It will be clipped to the last 31 days.")
+    if (date_to - date_from).days > 30:
+        st.warning("Range exceeds 30 days. It will be clipped to the last 30 days.")
 
     run_btn = st.button("Run", type="primary", use_container_width=True)
 
