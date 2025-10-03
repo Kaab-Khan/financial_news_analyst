@@ -74,38 +74,6 @@ from src.models.alpha_vintage_api import av_symbol_search
 # ----- Marks to separate slow/network tests -----
 pytestmark = [pytest.mark.integration, pytest.mark.network]
 
-# def test_live_av_symbol_search_happy_path():
-#     """
-#     Live test against Alpha Vantage: verifies basic contract without hard-coding vendor result order.
-#     """
-
-#     # Check if the API key is set
-#     if not ALPHA_VINTAGE_API_KEY:
-#         pytest.fail("API key not set. Set APLHA_VINTAGE_API_KEY to run this test.")
-
-#     # Call the function
-#     result = av_symbol_search("AAPL", ALPHA_VINTAGE_API_URL, ALPHA_VINTAGE_API_KEY)
-
-#     # Assertions
-#     for k in ("symbol", "name", "type", "region", "currency", "matchScore", "raw"):
-#         assert k in result, f"Missing key: {k}"
-#         print(f"{k}: {result[k]}")
-
-#     # Types
-#     assert isinstance(result["symbol"], str) and result["symbol"], "symbol should be non-empty str"
-#     assert isinstance(result["name"], str) and result["name"], "name should be non-empty str"
-#     assert isinstance(result["type"], str) and result["type"], "type should be non-empty str"
-#     assert isinstance(result["region"], str) and result["region"], "region should be non-empty str"
-#     assert isinstance(result["currency"], str) and result["currency"], "currency should be non-empty str"
-#     assert isinstance(result["matchScore"], float), "matchScore should be float"
-#     assert isinstance(result["raw"], dict), "raw should contain original match dict"
-
-#     # Reasonable value checks
-#     assert 0.0 <= result["matchScore"] <= 1.0
-#     assert re.search(r"apple", result["name"], re.IGNORECASE), f"name didn’t look like Apple: {result['name']}"
-#     assert len(result["region"]) > 0
-#     assert result["currency"] in {"USD", "GBP", "CAD", "EUR"}
-
 def test_live_av_symbol_search_no_match_raises():
     """
     Live test negative case: a nonsense query should raise RuntimeError (no bestMatches).

@@ -64,30 +64,6 @@ def format_av_daily_data(data):
     return formatted_data
 
 
-# def filter_ohlcv_by_range(
-#     data: List[Dict], start_date: datetime.date, end_date: datetime.date
-# ) -> List[Dict]:
-#     """
-#     Filters OHLCV data for the given date range [start_date, end_date].
-#     Expects data as a list of dicts with 'date' as YYYY-MM-DD string.
-#     """
-#     # Convert string dates in data to datetime.date
-#     filtered = []
-#     for row in data:
-#         if row["date"] is str:
-#             row_date = datetime.datetime.strptime(row["date"], "%Y-%m-%d").date()
-#         else:
-#             row_date = row["date"]
-#         if start_date <= row_date <= end_date:
-#             new_row = dict(row)
-#             new_row["date"] = row_date
-#             filtered.append(new_row)
-
-#     # Sort ascending by date
-#     filtered.sort(key=lambda x: x["date"], reverse=True)
-#     return filtered
-
-
 def filter_ohlcv_by_range(data: List[Dict], start_date, end_date) -> List[Dict]:
     """
     Filters OHLCV data for the given date range [start_date, end_date].

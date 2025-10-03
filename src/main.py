@@ -1,16 +1,12 @@
-"""
-Simplest runner for the pipeline.
-- Hardcode the company name here for now.
-- Tomorrow we can add CLI parsing, or hook it to a web app / Telegram bot.
-"""
-
 from src.pipeline.run_pipeline import run_pipeline
-
-# at top of src/pipeline/run_pipeline.py
 import datetime as dt
 import json
 import os
 
+"""
+Simplest runner for the pipeline.
+- Hardcode the company name here for now.
+"""
 
 if __name__ == "__main__":
     company_name = ""

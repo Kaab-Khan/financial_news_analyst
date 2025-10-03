@@ -108,9 +108,6 @@ def run_pipeline(
 
       }
     """
-    #    api_key = os.getenv("OPENAI_API_KEY")
-    # if not api_key:
-    #     raise RuntimeError("OPENAI_API_KEY not set. `export OPENAI_API_KEY=...`")
 
     # Normalize/clip dates (max 31 days)
     logger.debug(
@@ -127,16 +124,6 @@ def run_pipeline(
             date_from=_to_datestr(date_from),
             date_to=_to_datestr(date_to),
         )
-        # else:
-        #     raw = get_news_articles_urls(query=company_name)
-    # except TypeError:
-    #     # Your fetcher doesn't accept date params; fall back to no-date fetch
-    #     raise RuntimeError("The fetcher function must accept date_from and date_to parameters.")
-    # raw = get_news_articles_urls(
-    #     query=company_name,
-    #     date_from=(str(date_from)[:10] if date_from else None),
-    #     date_to=(str(date_to)[:10] if date_to else None),
-    # )
 
     # 2) Extract minimal fields
     extracted = extract_titles(raw)
@@ -186,49 +173,3 @@ def run_pipeline(
         "Stock Price Start": stock_date["first_price"] if stock_date else None,
         "Stock Price End": stock_date["last_price"] if stock_date else None,
     }
-
-
-# def run_pipeline(company_name: str) -> Dict[str, Any]:
-#     """
-#     Run the full pipeline for a company name and return a structured dict:
-#       {
-#         "query": company_name,
-#         "count": <int>,
-#         "articles": [ {title, description, url, source, sentiment_*}, ... ],
-#         "aggregate": { score_0_100, overall_tag, counts, weighted_share }
-#       }
-#     """
-#     api_key = os.getenv("OPENAI_API_KEY")
-#     if not api_key:
-#         raise RuntimeError("OPENAI_API_KEY not set. `export OPENAI_API_KEY=...`")
-
-#     # 1) Fetch raw (by company name)
-#     raw = get_news_articles_urls(company_name)
-
-#     # 2) Extract minimal fields from NewsAPI response
-#     extracted = extract_titles(raw)
-
-#     # 3) Normalize (keep only title/description/url/source/domain/published_at if present)
-
-#     # 4) Trusted-source filter (your domain/source pass)
-#     trusted = filtered_articles(extracted)
-
-#     # 5) OpenAI relevance filter — keep only investment-relevant items
-#     final_articles: List[Dict[str, Any]] = filter_relevant_articles(trusted, api_key)
-
-#     # # 6) FinBERT sentiment on title+description
-#     # for a in final_articles:
-#     #     s = label_to_signed(a.get("title", ""), a.get("description", ""))
-#     #     a["sentiment_label"] = s["label"]
-#     #     a["sentiment_conf"] = s["confidence"]
-
-#     # 7) Aggregate to a 0..100 score + tag
-#     enriched_articles = enrich_with_sentiment(final_articles)
-#     agg = aggregate_sentiment(enriched_articles)
-
-#     return {
-#         "query": company_name,
-#         "count": len(final_articles),
-#         "articles": final_articles,   # main.py decides whether to print all
-#         "aggregate": agg,
-#     }
