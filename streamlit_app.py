@@ -53,7 +53,7 @@ st.markdown("""
 # -------------------------
 st.title("📰 Financial News Sentiment")
 st.caption("Fetches news by company name → filters for investment relevance → FinBERT on title+description → aggregates to a 0–100 sentiment." \
-"Stok prices over the same period are fetched from Alpha Vantage.")
+"Stock prices over the same period are fetched from Alpha Vantage.")
 
 # -------------------------
 # sidebar controls
