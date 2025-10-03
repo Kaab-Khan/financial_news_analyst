@@ -121,33 +121,33 @@ def get_news_articles_urls(
 #     return data
 
 
-def extract_title_url_content(data: dict):
-    """
-    Your existing extractor — unchanged, but keep a guard.
-    """
-    articles = data.get("articles") or []
-    title_url_content = []
-    for article in articles:
-        title = article.get("title", "No title available")
-        source = article.get("source", {})
-        source_name = (
-            source.get("name")
-            if isinstance(source, dict)
-            else (source or "No source available")
-        )
-        url = article.get("url", "No url available")
-        description = article.get("description", "")
-        content = article.get("content", "")
-        title_url_content.append(
-            {
-                "title": title,
-                "source": source_name,
-                "url": url,
-                "description": description,
-                "content": content,
-            }
-        )
-    return title_url_content
+# def extract_title_url_content(data: dict):
+#     """
+#     Your existing extractor — unchanged, but keep a guard.
+#     """
+#     articles = data.get("articles") or []
+#     title_url_content = []
+#     for article in articles:
+#         title = article.get("title", "No title available")
+#         source = article.get("source", {})
+#         source_name = (
+#             source.get("name")
+#             if isinstance(source, dict)
+#             else (source or "No source available")
+#         )
+#         url = article.get("url", "No url available")
+#         description = article.get("description", "")
+#         content = article.get("content", "")
+#         title_url_content.append(
+#             {
+#                 "title": title,
+#                 "source": source_name,
+#                 "url": url,
+#                 "description": description,
+#                 "content": content,
+#             }
+#         )
+#     return title_url_content
 
 
 # def extract_title_and_urls(data):
